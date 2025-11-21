@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Management</title>
+    <link rel="stylesheet" href="adminpage.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Membership Management</h3>
+            <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" onclick="showSection('home')" class="nav-link active">Home</a></li>
+                <li><a href="#" onclick="showSection('registration')" class="nav-link">Registration</a></li>
+                <li><a href="#" onclick="showSection('members')" class="nav-link">Database</a></li>
+                <li><a href="#" onclick="showSection('statistics')" class="nav-link">Statistics</a></li>
+                <li><a href="#" onclick="showSection('Requests')" class="nav-link">Requests</a></li>
+            </ul>
+        </nav>
+    </div>
+  
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <div class="main-wrapper">
+        <header class="header">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <h1>Member Registration & Financial Tracking</h1>
+            <button class="theme-toggle" onclick="toggleTheme()" style="margin-left: auto;"></button>
+            <button class="btn btn-danger" onclick="logout()" style="margin-left: 1rem;">Logout</button>
+        </header>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <div class="content">
+           
+            <div id="homeSection" class="section">
+                <div class="quick-stats">
+                    <h3>📊 Quick Overview</h3>
+                    <div class="stats-row">
+                        <div class="quick-stat">
+                            <span class="stat-number" id="quickTotalMembers">0</span>
+                            <span class="stat-label">Total Members </span>
+                        </div>
+                        <div class="quick-stat">
+                            <span class="stat-number" id="quickTotalRevenue">₱0</span>
+                            <span class="stat-label">Total Earned </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="registrationSection" class="section">
+                <div class="card">
+                    <h2>Student Registration</h2>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="studentName">Full Name</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentNumber">Student Number</label>
+                            <input type="text" id="studentNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="schoolYear">School Year</label>
+                            <select id="schoolYear" required>
+                                <option value="">Select Year</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="membershipFee">Membership Fee </label>
+                            <input type="number" id="membershipFee" value="20" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Register Student</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="statisticsSection" class="section">
+                <div class="card">
+                    <h2>Membership Statistics</h2>
+                    <div class="stats-overview">
+                        <div class="stat-card">
+                            <div class="number" id="totalMembers">0</div>
+                            <div class="label">Total Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number" id="totalRevenue">₱0</div>
+                            <div class="label">Total Earned</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Membership Pie Chart</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="pieChart" width="400" height="400"></canvas>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #159c03;"></div>
+                                    <span>1st Year</span>
+                                    <span class="legend-count" id="legend1stYear">0</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background:#c9e84d;"></div>
+                                    <span>2nd Year</span>
+                                    <span class="legend-count" id="legend2ndYear">0</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #e6144c;"></div>
+                                    <span>3rd Year</span>
+                                    <span class="legend-count" id="legend3rdYear">0</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #0b61f6;"></div>
+                                    <span>4th Year</span>
+                                    <span class="legend-count" id="legend4thYear">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="membersSection" class="section">
+                <div class="card">
+                    <h2>Members Management</h2>
+                    
+                    <div class="search-controls">
+                        <input type="text" id="searchInput" placeholder="Search by name, student number, or control number">
+                        <button class="btn" onclick="searchStudents()">Search</button>
+                        <button class="btn btn-warning" onclick="clearSearch()">Clear</button>
+                    </div>
+                    
+                    <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="yearFilter">Filter by Year</label>
+                            <select id="yearFilter" onchange="applyFilters()">
+                                <option value="">All Years</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="data-controls">
+                        <div class="control-group">
+                            <h3>Data Operations</h3>
+                            <div class="button-group">
+                                <button class="btn" onclick="saveDataFile()">Save Data</button>
+                                <button class="btn btn-success" onclick="loadDataFile()">Load Data</button>
+                                <button class="btn btn-danger" onclick="deleteAllMembers()">Delete All</button>
+                            </div>
+                            <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileLoad(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="members-table">
+                    <div class="table-header">
+                        <h3>Registered Members</h3>
+                        <div class="table-stats">
+                            <span id="filteredCount">0</span> members shown 
+                        </div>
+                    </div>
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Control Number</th>
+                                    <th>Name</th>
+                                    <th>Student Number</th>
+                                    <th>Year Level</th>
+                                    <th>Fee</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="RequestsSection" class="section">
+                <div class="card">
+                    <h2>Membership Requests</h2>            
+                    <div class="requests-table">
+                        <div class="table-header">
+                            <h3>Pending Requests</h3>
+                            <div class="table-stats">
+                                <span id="requestCount">0</span> requests
+                            </div>
+                        </div>
+                        <div class="table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th>Student Number</th>
+                                        <th>Year Level</th>
+                                        <th>Fee</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Student Details</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editNumber">Student Number</label>
+                    <input type="text" id="editNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="editYear">School Year</label>
+                    <select id="editYear" required>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editFee">Membership Fee</label>
+                    <input type="number" id="editFee" min="0" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-success">Update Student</button>
+                <button type="button" class="btn" onclick="closeEditModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+    <!-- Admin Page Script -->
+    <script src="adminpage.js"></script>
+</body>
+</html>

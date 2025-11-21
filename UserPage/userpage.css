@@ -1,0 +1,418 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cherry Bomb One', 'Comic Sans MS', cursive;
+    background: repeating-linear-gradient(
+        90deg,
+        #ffc0cb 0px,
+        #ffc0cb 40px,
+        #ffb6d9 40px,
+        #ffb6d9 80px
+    );
+    min-height: 100vh;
+    padding: 20px;
+    color: #8b0045;
+}
+
+.main-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Notification Toast */
+.notification-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #ff69b4, #ff91a4);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    min-width: 350px;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.notification-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    color: white;
+}
+
+.toast-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.toast-text {
+    flex: 1;
+}
+
+.toast-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.toast-message {
+    font-size: 0.9rem;
+    font-family: 'Arial', sans-serif;
+    opacity: 0.95;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Alerts */
+.alert {
+    display: none;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1rem;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #ff69b4, #ff91a4);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #dc143c, #ff6b9d);
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+}
+
+/* Status Card */
+.status-card {
+    background: #ffcce5;
+    border: 4px solid #ff69b4;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #ff69b4;
+}
+
+.status-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    color: #d63384;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.status-badge-header {
+    background: #ffb6d9;
+    color: #8b0045;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 3px solid #ff69b4;
+}
+
+.status-badge-header.approved {
+    background: #90ee90;
+    color: #006400;
+    border-color: #32cd32;
+}
+
+.status-badge-header.denied {
+    background: #ffcccb;
+    color: #8b0000;
+    border-color: #dc143c;
+}
+
+.status-badge-header.pending {
+    background: #ffb6d9;
+    color: #8b0045;
+    border-color: #ff69b4;
+}
+
+.status-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.status-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.status-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-label-text {
+    font-size: 1rem;
+    color: #d63384;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-value {
+    background: rgba(255, 182, 217, 0.5);
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    color: #8b0045;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.status-input {
+    background: rgba(255, 255, 255, 0.7);
+    border: 3px solid #ff69b4;
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    color: #8b0045;
+    font-family: 'Cherry Bomb One', cursive;
+    transition: all 0.3s ease;
+}
+
+.status-input:focus {
+    outline: none;
+    border-color: #ff1493;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.2);
+}
+
+.status-input option {
+    font-family: Arial, sans-serif;
+}
+
+/* Proof of Payment Container */
+.proof-container {
+    background: rgba(217, 164, 189, 0.5);
+    border-radius: 15px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.proof-placeholder {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.3rem;
+    font-family: 'Cherry Bomb One', cursive;
+    cursor: pointer;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.proof-placeholder:hover {
+    color: white;
+    transform: scale(1.05);
+}
+
+#photoPreview img,
+#proofDisplay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Status Actions */
+.status-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.status-btn {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-family: 'Cherry Bomb One', cursive;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-reregister {
+    background: #d9a4bd;
+    color: #8b0045;
+}
+
+.btn-reregister:hover {
+    background: #c78faa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 164, 189, 0.4);
+}
+
+.btn-clear {
+    background: rgba(174, 135, 158, 0.8);
+    color: white;
+}
+
+.btn-clear:hover {
+    background: rgba(174, 135, 158, 1);
+    transform: translateY(-2px);
+}
+
+.btn-logout {
+    background: #d9a4bd;
+    color: #8b0045;
+}
+
+.btn-logout:hover {
+    background: #c78faa;
+    transform: translateY(-2px);
+}
+
+/* Status Footer */
+.status-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 3px solid #ff69b4;
+    margin-top: 10px;
+}
+
+.footer-info {
+    display: flex;
+    gap: 40px;
+    font-size: 1.1rem;
+    color: #d63384;
+    font-weight: bold;
+}
+
+.footer-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #90ee90;
+    padding: 15px 35px;
+    border-radius: 30px;
+    border: 4px solid #32cd32;
+    transition: all 0.3s ease;
+}
+
+.footer-status.denied {
+    background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+    border-color: #ff69b4;
+}
+
+.status-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #006400;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.status-label.approved {
+    color: #006400;
+}
+
+.status-label.denied {
+    color: #8b0045;
+}
+
+.status-label.pending {
+    color: #8b0045;
+}
+
+.status-icon {
+    font-size: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .status-body {
+        grid-template-columns: 1fr;
+    }
+
+    .status-actions {
+        flex-direction: column;
+    }
+
+    .status-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .status-title {
+        font-size: 2rem;
+    }
+
+    .footer-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .notification-toast {
+        min-width: 300px;
+        right: 10px;
+        left: 10px;
+    }
+}

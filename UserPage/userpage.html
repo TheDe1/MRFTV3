@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Management</title>
+    <link rel="stylesheet" href="userpage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast">
+        <div class="toast-content">
+            <div class="toast-icon" id="toastIcon">✓</div>
+            <div class="toast-text">
+                <div class="toast-title" id="toastTitle">Request Approved!</div>
+                <div class="toast-message" id="toastMessage">Your membership request has been approved.</div>
+            </div>
+            <button class="toast-close" id="toastClose">×</button>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <div class="content" id="statusSection" style="display: none;">
+            <div class="status-card">
+                <div class="status-header">
+                    <h1 class="status-title">MEMBERSHIP<br>MANAGEMENT</h1>
+                    <div class="status-badge-header pending" id="statusBadgeHeader">PENDING</div>
+                </div>
+
+                <div class="status-body">
+                    <div class="status-column">
+                        <div class="status-field">
+                            <label class="status-label-text">FULL NAME</label>
+                            <div class="status-value" id="displayName">---</div>
+                        </div>
+                        <div class="status-field">
+                            <label class="status-label-text">STUDENT NUMBER</label>
+                            <div class="status-value" id="displayNumber">---</div>
+                        </div>
+                        <div class="status-field">
+                            <label class="status-label-text">SCHOOL YEAR</label>
+                            <div class="status-value" id="displayYear">---</div>
+                        </div>
+                        <div class="status-field">
+                            <label class="status-label-text">MEMBERSHIP FEE</label>
+                            <div class="status-value" id="displayFee">---</div>
+                        </div>
+
+                        <div class="status-actions">
+                            <button class="status-btn btn-reregister" id="reregisterBtn">REQUEST REGISTER</button>
+                            <button class="status-btn btn-clear" id="clearBtn">CLEAR</button>
+                            <button class="status-btn btn-logout" id="logoutBtn">LOG OUT</button>
+                        </div>
+                    </div>
+
+                    <div class="status-column">
+                        <div class="status-field">
+                            <label class="status-label-text">PROOF OF PAYMENT</label>
+                            <div class="proof-container" id="proofDisplay">
+                                <div class="proof-placeholder">ADD PHOTO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-footer">
+                    <div class="footer-info">
+                        <span id="displaySubmittedBy">---</span>
+                        <span id="displaySubmittedDate">--/--/----</span>
+                    </div>
+                    <div class="footer-status" id="footerStatus">
+                        <span class="status-label">REQUEST PENDING</span>
+                        <span class="status-icon">⏳</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Section (Shown by default) -->
+        <div class="content" id="registrationSection">
+            <div class="status-card">
+                <div class="status-header">
+                    <h1 class="status-title">MEMBERSHIP<br>MANAGEMENT</h1>
+                </div>
+
+                <form id="registrationForm">
+                    <div class="status-body">
+                        <div class="status-column">
+                            <div class="status-field">
+                                <label class="status-label-text">FULL NAME</label>
+                                <input type="text" class="status-input" id="studentName" required>
+                            </div>
+                            <div class="status-field">
+                                <label class="status-label-text">STUDENT NUMBER</label>
+                                <input type="text" class="status-input" id="studentNumber" required>
+                            </div>
+                            <div class="status-field">
+                                <label class="status-label-text">SCHOOL YEAR</label>
+                                <select class="status-input" id="schoolYear" required>
+                                    <option value="">Select Year</option>
+                                    <option value="1st Year">1st Year</option>
+                                    <option value="2nd Year">2nd Year</option>
+                                    <option value="3rd Year">3rd Year</option>
+                                    <option value="4th Year">4th Year</option>
+                                </select>
+                            </div>
+                            <div class="status-field">
+                                <label class="status-label-text">MEMBERSHIP FEE</label>
+                                <input type="number" class="status-input" id="membershipFee" value="20" min="0" step="0.01" required>
+                            </div>
+
+                            <div class="status-actions">
+                                <button type="submit" class="status-btn btn-reregister">REQUEST REGISTER</button>
+                                <button type="button" class="status-btn btn-clear" id="clearFormBtn">CLEAR</button>
+                                <button type="button" class="status-btn btn-logout" id="logoutBtnForm">LOG OUT</button>
+                            </div>
+                        </div>
+
+                        <div class="status-column">
+                            <div class="status-field">
+                                <label class="status-label-text">PROOF OF PAYMENT</label>
+                                <div class="proof-container" id="photoPreviewContainer">
+                                    <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                                    <button type="button" class="proof-placeholder" id="addPhotoBtn">ADD PHOTO</button>
+                                    <div id="photoPreview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="status-footer">
+                    <div class="footer-info">
+                        <span id="currentUsername">---</span>
+                        <span id="currentDate">--/--/----</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="../firebase-config.js"></script>
+    <!-- User Page Script -->
+    <script src="userpage.js"></script>
+</body>
+</html>

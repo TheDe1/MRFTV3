@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Management - Login</title>
+    <link rel="stylesheet" href="loginpage.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <div class="main-wrapper">
+        <header class="header">
+            <h1>Login and Sign Up</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">⋆.˚🌷༘⋆</button>
+        </header>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <div class="content">
+            <div class="card" id="loginCard">
+                <h2>Login</h2>
+                <p>Login now to access your membership</p>
+            
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginUsername">Username:</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required>  
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-success">Login</button>
+                        <button type="button" class="btn btn-info" onclick="showSignup()">Sign Up</button>
+                        <button type="button" class="btn btn-warning" onclick="showAdminLogin()">Admin Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card" id="signupCard" style="display: none;">
+                <h2>Sign Up</h2>
+                <p>Create a new account to get started</p>
+                
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupEmail">Email:</label>
+                        <input type="email" id="signupEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupUsername">Username:</label>
+                        <input type="text" id="signupUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password:</label>
+                        <input type="password" id="signupPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password:</label>
+                        <input type="password" id="signupConfirmPassword" required>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-success">Create Account</button>
+                        <button type="button" class="btn" onclick="showLogin()">Back to Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card" id="adminCard" style="display: none;">
+                <h2>Admin Login</h2>
+                <p>Admin access only</p>
+                
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label for="adminUsername">Username:</label>
+                        <input type="text" id="adminUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Password:</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-success">Admin Login</button>
+                        <button type="button" class="btn" onclick="showLogin()">Back to Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+    <!-- Login Page Script -->
+    <script src="loginpage.js"></script>
+</body>
+</html>
