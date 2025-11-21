@@ -214,7 +214,7 @@ function viewProof(proofUrl) {
 
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = '../Loginpage/loginpage.html';
+        window.location.href = '../index.html';
     }
 }
 

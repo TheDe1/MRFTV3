@@ -104,7 +104,7 @@ async function handleLogin(e) {
                 showAlert('Login successful! Redirecting...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = '../UserPage/userpage.html';
+                    window.location.href = 'UserPage/userpage.html';
                 }, 1500);
             } else {
                 showAlert('Invalid credentials! Please check your email, username, and password.', 'error');
@@ -213,7 +213,7 @@ async function handleAdminLogin(e) {
         showAlert('Admin login successful! Redirecting...', 'success');
         
         setTimeout(() => {
-            window.location.href = '../Adminpage/adminpage.html';
+            window.location.href = 'Adminpage/adminpage.html';
         }, 1500);
     } else {
         showAlert('Invalid admin credentials!', 'error');
@@ -246,7 +246,7 @@ function logout() {
     } catch (e) {
         console.warn('Could not clear user session:', e);
     }
-    window.location.href = '../Loginpage/loginpage.html';
+    window.location.href = 'index.html';
 }
 
 function showAlert(message, type) {

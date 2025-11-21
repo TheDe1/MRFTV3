@@ -16,7 +16,7 @@ function checkAuthentication() {
     const currentUser = getCurrentUser();
     
     if (!currentUser) {
-        window.location.href = '../Loginpage/loginpage.html';
+        window.location.href = '../index.html';
         return;
     }
     
@@ -391,7 +391,7 @@ function logout() {
         } catch (e) {
             console.warn('Could not clear user session:', e);
         }
-        window.location.href = '../Loginpage/loginpage.html';
+        window.location.href = '../index.html';
     }
 }
 
