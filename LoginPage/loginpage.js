@@ -88,34 +88,54 @@ async function handleLogin(e) {
         return;
     }
     
-    try {
-        const snapshot = await dbRefs.users.once('value');
-        
-        if (snapshot.exists()) {
-            const users = Object.values(snapshot.val());
-            const user = users.find(u => 
-                u.email.toLowerCase() === email.toLowerCase() && 
-                u.username.toLowerCase() === username.toLowerCase() &&
-                u.password === password
-            );
-            
-            if (user) {
-                setCurrentUser(user);
-                showAlert('Login successful! Redirecting...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'UserPage/userpage.html';
-                }, 1500);
-            } else {
-                showAlert('Invalid credentials! Please check your email, username, and password.', 'error');
-            }
-        } else {
-            showAlert('No users found. Please sign up first.', 'error');
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        showAlert('Login failed. Please try again.', 'error');
+   try {
+    // Wait for Firebase to load
+    if (!window.dbRefs) {
+        showAlert('Firebase still loading. Please wait...', 'error');
+        return;
     }
+
+    // Use firebase.database() directly
+    const snapshot = await firebase.database().ref('users').once('value');
+    let users = [];
+    
+    if (snapshot.exists()) {
+        users = Object.values(snapshot.val());
+        
+        if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+            showAlert('Email already exists!', 'error');
+            return;
+        }
+        
+        if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+            showAlert('Username already exists!', 'error');
+            return;
+        }
+    }
+    
+    const userId = Date.now();
+    const newUser = {
+        id: userId,
+        email: email,
+        username: username,
+        password: password,
+        createdAt: new Date().toISOString(),
+        isAdmin: false
+    };
+    
+    // Save to Firebase
+    await firebase.database().ref('users/' + userId).set(newUser);
+    
+    showAlert('Account created successfully! Redirecting to login...', 'success');
+    
+    document.getElementById('signupForm').reset();
+
+    setTimeout(() => {
+        showLogin();
+    }, 2000);
+} catch (error) {
+    console.error('Signup error:', error);
+    showAlert('Failed to create account: ' + error.message, 'error');
 }
 
 async function handleSignup(e) {
@@ -148,7 +168,15 @@ async function handleSignup(e) {
     }
     
     try {
-        const snapshot = await dbRefs.users.once('value');
+        // FIX: Wait for Firebase to be ready
+        if (!window.dbRefs) {
+            showAlert('Firebase is still loading. Please try again.', 'error');
+            return;
+        }
+
+        // Check existing users
+        const usersRef = firebase.database().ref('users');
+        const snapshot = await usersRef.once('value');
         let users = [];
         
         if (snapshot.exists()) {
@@ -165,6 +193,7 @@ async function handleSignup(e) {
             }
         }
         
+        // Create new user
         const userId = Date.now();
         const newUser = {
             id: userId,
@@ -175,7 +204,8 @@ async function handleSignup(e) {
             isAdmin: false
         };
         
-        await dbRefs.users.child(userId.toString()).set(newUser);
+        // Save to Firebase
+        await firebase.database().ref('users/' + userId).set(newUser);
         
         showAlert('Account created successfully! Redirecting to login...', 'success');
         
@@ -186,7 +216,7 @@ async function handleSignup(e) {
         }, 2000);
     } catch (error) {
         console.error('Signup error:', error);
-        showAlert('Failed to create account. Please try again.', 'error');
+        showAlert('Failed to create account: ' + error.message, 'error');
     }
 }
 
@@ -268,3 +298,5 @@ function showAlert(message, type) {
 }
 
 console.log('Login system with Firebase initialized successfully!');
+}
+

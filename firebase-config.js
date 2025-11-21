@@ -1,11 +1,9 @@
-// Import the functions you need from the SDKs you need
+// Firebase SDK initialization and setup
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBSDW159_2qzsa3Nga9W8CTzH7RcVoEz1U",
   authDomain: "membership-management-1b787.firebaseapp.com",
@@ -13,9 +11,30 @@ const firebaseConfig = {
   storageBucket: "membership-management-1b787.firebasestorage.app",
   messagingSenderId: "163002063066",
   appId: "1:163002063066:web:fcdfa9461031b4190e2de3",
-  measurementId: "G-KNVZHNWBRM"
+  measurementId: "G-KNVZHNWBRM",
+  databaseURL: "https://membership-management-1b787-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Initialize Realtime Database
+const database = getDatabase(app);
+
+// Initialize Cloud Storage
+const storage = firebase.storage();
+
+// Create database references
+const dbRefs = {
+  users: database.ref('users'),
+  registrations: database.ref('registrations'),
+  students: database.ref('students'),
+  deletedControlNumbers: database.ref('deletedControlNumbers')
+};
+
+// Make globally available
+window.dbRefs = dbRefs;
+window.database = database;
+window.storage = storage;
+
+console.log('Firebase initialized successfully!');
